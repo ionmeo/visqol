@@ -21,24 +21,30 @@ runs:
       run: |
         if [[ "${{inputs.platform}}" == "windows" ]]; then
           PYTHON_BIN=$(which python)
-          export PYTHON_BIN_PATH="$PYTHON_BIN"
           echo "PYTHON_BIN_PATH=$PYTHON_BIN" >> $GITHUB_ENV
         fi
     - name: Setup MSVC (Windows)
       if: inputs.platform == 'windows'
       shell: pwsh
       run: |
-        # Find VS installation and verify C++ tools
         $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
         $vsPath = & $vswhere -latest -property installationPath
-        Write-Host "VS installation: $vsPath"
         $vcPath = "$vsPath\VC"
         Write-Host "VC path: $vcPath"
-        # List what's in VC\Auxiliary\Build
-        if (Test-Path "$vcPath\Auxiliary\Build\vcvarsall.bat") {
-          Write-Host "vcvarsall.bat found"
+
+        # Find MSVC tools version
+        $msvcDir = Get-ChildItem "$vcPath\Tools\MSVC" -ErrorAction SilentlyContinue | Sort-Object Name -Descending | Select-Object -First 1
+        if ($msvcDir) {
+          Write-Host "MSVC version: $($msvcDir.Name)"
+          $clPath = "$($msvcDir.FullName)\bin\Hostx64\x64\cl.exe"
+          if (Test-Path $clPath) {
+            Write-Host "cl.exe found at: $clPath"
+          } else {
+            Write-Host "cl.exe NOT found"
+            Get-ChildItem "$vcPath\Tools\MSVC" -Recurse -Filter "cl.exe" | ForEach-Object { Write-Host $_.FullName }
+          }
         } else {
-          Write-Host "vcvarsall.bat NOT found, installing C++ build tools..."
+          Write-Host "No MSVC tools directory found, installing C++ build tools..."
           & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe" modify `
             --installPath "$vsPath" `
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
@@ -47,7 +53,11 @@ runs:
         echo "BAZEL_VC=$vcPath" >> $env:GITHUB_ENV
     - shell: bash
       run: |
-        bazelisk test -c opt :all ${{inputs.build-options}}
+        if [[ "${{inputs.platform}}" == "windows" ]]; then
+          bazelisk test -c opt :all --repo_env=BAZEL_VC="$BAZEL_VC" ${{inputs.build-options}}
+        else
+          bazelisk test -c opt :all ${{inputs.build-options}}
+        fi
     - shell: bash
       run: |
         if [[ "${{inputs.platform}}" != "windows" ]]; then
@@ -55,7 +65,11 @@ runs:
         fi
     - shell: bash
       run: |
-        bazelisk build -c opt :all ${{inputs.build-options}}
+        if [[ "${{inputs.platform}}" == "windows" ]]; then
+          bazelisk build -c opt :all --repo_env=BAZEL_VC="$BAZEL_VC" ${{inputs.build-options}}
+        else
+          bazelisk build -c opt :all ${{inputs.build-options}}
+        fi
     - shell: bash
       run: |
         if [[ "${{inputs.platform}}" != "windows" ]]; then
