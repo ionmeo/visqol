@@ -60,6 +60,13 @@ build --experimental_repo_remote_exec
 build --enable_platform_specific_config
 
 
+## Linux config
+# GCC 13+ requires explicit cstdint include (TensorFlow 2.11.0 compatibility)
+build:linux --cxxopt=-include
+build:linux --cxxopt=cstdint
+build:linux --host_cxxopt=-include
+build:linux --host_cxxopt=cstdint
+
 ## Windows config
 startup --windows_enable_symlinks
 build:windows --enable_runfiles
