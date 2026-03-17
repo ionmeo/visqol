@@ -45,6 +45,11 @@ build --define=grpc_no_ares=true
 # Sets the default Apple platform to macOS.
 build --apple_platform_type=macos
 
+## macOS config
+# Fix zlib fdopen macro conflict with Xcode 16+ SDK
+build:macos --copt=-DHAVE_FSEEKO
+build:macos --host_copt=-DHAVE_FSEEKO
+
 build -c opt
 
 # ViSQOL is overridding the default c++14 settings in tensorflow.
