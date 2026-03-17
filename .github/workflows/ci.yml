@@ -23,7 +23,7 @@ jobs:
           platform: linux
           architecture: amd64
 
-  macos-amd64:
+  macos-arm64:
     runs-on: macos-latest
     steps:
       - name: Checkout repo
@@ -38,7 +38,7 @@ jobs:
         uses: ./.github/actions/visqol_builder
         with:
           platform: macos
-          architecture: amd64
+          architecture: arm64
 
   windows-amd64:
     runs-on: windows-latest
@@ -50,7 +50,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Configure Windows build
-        run: ./configure.ps1
+        run: ./configure_windows.ps1
         shell: pwsh
       - name: Setup ViSQOL dependencies
         uses: ./.github/actions/setup_visqol_deps
