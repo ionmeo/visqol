@@ -4,13 +4,42 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Release tag'
+        description: 'Release tag (e.g., v1.0.0)'
         required: true
+      overwrite:
+        description: 'Overwrite existing release'
+        type: boolean
+        default: false
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Check if release exists
+        id: check_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view ${{ inputs.tag }} --repo ${{ github.repository }} > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Fail if release exists and overwrite not set
+        if: steps.check_release.outputs.exists == 'true' && inputs.overwrite == false
+        run: |
+          echo "::error::Release ${{ inputs.tag }} already exists. Run with overwrite=true to replace it."
+          exit 1
+
+      - name: Delete existing release if overwrite
+        if: steps.check_release.outputs.exists == 'true' && inputs.overwrite == true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete ${{ inputs.tag }} --repo ${{ github.repository }} --yes
+          git push --delete origin ${{ inputs.tag }} || true
+
       - name: Get latest build run ID
         id: get_run
         env:
@@ -26,14 +55,20 @@ jobs:
           run-id: ${{ steps.get_run.outputs.run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: artifacts
-          merge-multiple: true
 
-      - name: List artifacts
-        run: ls -la artifacts/
+      - name: Create release zips
+        run: |
+          cd artifacts
+          for dir in */; do
+            name="${dir%/}"
+            zip -r "../${name}.zip" "$dir"
+          done
+          cd ..
+          ls -la *.zip
 
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.tag }}
-          files: artifacts/*
+          files: "*.zip"
           generate_release_notes: true
