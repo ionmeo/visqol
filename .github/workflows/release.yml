@@ -6,18 +6,24 @@ on:
       tag:
         description: 'Release tag'
         required: true
-      run_id:
-        description: 'GitHub Actions run ID (find it in the URL of the build run)'
-        required: true
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Get latest build run ID
+        id: get_run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RUN_ID=$(gh run list --repo ${{ github.repository }} --workflow=ci.yml --status=success --limit=1 --json databaseId -q '.[0].databaseId')
+          echo "run_id=$RUN_ID" >> $GITHUB_OUTPUT
+          echo "Found latest successful build run: $RUN_ID"
+
       - name: Download artifacts from build
         uses: actions/download-artifact@v4
         with:
-          run-id: ${{ inputs.run_id }}
+          run-id: ${{ steps.get_run.outputs.run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: artifacts
           merge-multiple: true
