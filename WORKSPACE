@@ -13,6 +13,10 @@ cc_library(
     srcs = glob(["*.c"]),
     hdrs = glob(["*.h"]),
     includes = ["."],
+    copts = select({
+        "@bazel_tools//src/conditions:darwin": ["-include", "unistd.h"],
+        "//conditions:default": [],
+    }),
     visibility = ["//visibility:public"],
 )
 """,
