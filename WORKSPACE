@@ -4,6 +4,28 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 
+# zlib - must be imported BEFORE TensorFlow to fix macOS Xcode 16+ fdopen conflict
+http_archive(
+    name = "zlib",
+    build_file_content = """
+cc_library(
+    name = "zlib",
+    srcs = glob(["*.c"]),
+    hdrs = glob(["*.h"]),
+    includes = ["."],
+    visibility = ["//visibility:public"],
+)
+""",
+    sha256 = "d14c38e313afc35a9a8760dadf26042f51ea0f5d154b0630a31da0540107fb98",
+    strip_prefix = "zlib-1.2.13",
+    urls = [
+        "https://github.com/madler/zlib/releases/download/v1.2.13/zlib-1.2.13.tar.xz",
+        "https://zlib.net/zlib-1.2.13.tar.xz",
+    ],
+    patch_args = ["-p1"],
+    patches = ["//:zlib_fdopen.patch"],
+)
+
 # The order of importing the archives is very important here.  In particular, tensorflow's
 # workspace import function imports a version of pybind11 and protobuf that are older and
 # not compatible with current pybind11_protobuf/abseil.  Since the first import is the only
