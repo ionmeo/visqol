@@ -120,7 +120,7 @@ http_archive(
     strip_prefix = "XNNPACK-e8f74a9763aa36559980a0c2f37f587794995622",
     urls = ["https://github.com/google/XNNPACK/archive/e8f74a9763aa36559980a0c2f37f587794995622.zip"],
     patch_args = ["-p1"],
-    patches = ["//:xnnpack_default.patch"],
+    patches = ["//:xnnpack_default.patch", "//:xnnpack_win_arm64.patch"],
 )
 
 git_repository(
