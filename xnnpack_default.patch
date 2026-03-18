@@ -1,6 +1,6 @@
 --- a/BUILD.bazel
 +++ b/BUILD.bazel
-@@ -16225,6 +16225,11 @@ config_setting(
+@@ -16224,6 +16224,11 @@ config_setting(
      values = {"cpu": "x64_windows"},
  )
 
@@ -10,7 +10,8 @@
 +)
 +
  config_setting(
-     name = "macos_x86_64",
+     name = "windows_x86_64_clang",
+     values = {
 @@ -16378,6 +16383,7 @@ selects.config_setting_group(
      name = "aarch64",
      match_any = [
