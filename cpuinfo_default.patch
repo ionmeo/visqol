@@ -4,7 +4,18 @@
          ":tvos_x86_64": COMMON_SRCS + X86_SRCS + MACH_SRCS + MACH_X86_SRCS,
          ":tvos_arm64": COMMON_SRCS + MACH_SRCS + MACH_ARM_SRCS,
          ":emscripten_wasm": COMMON_SRCS + EMSCRIPTEN_SRCS,
-+        "//conditions:default": COMMON_SRCS + X86_SRCS + MACH_SRCS + MACH_X86_SRCS,
++        ":windows_arm64": COMMON_SRCS + ARM_SRCS,
+         "//conditions:default": COMMON_SRCS + X86_SRCS + MACH_SRCS + MACH_X86_SRCS,
      }),
      copts = select({
-         ":windows_x86_64": [],
+@@ -253,6 +254,11 @@ config_setting(
+     values = {"cpu": "x64_windows"},
+ )
+
++config_setting(
++    name = "windows_arm64",
++    values = {"cpu": "arm64_windows"},
++)
++
+ config_setting(
+     name = "android_armv7",

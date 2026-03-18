@@ -1,3 +1,24 @@
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -16225,6 +16225,11 @@ config_setting(
+     values = {"cpu": "x64_windows"},
+ )
+
++config_setting(
++    name = "windows_arm64",
++    values = {"cpu": "arm64_windows"},
++)
++
+ config_setting(
+     name = "macos_x86_64",
+@@ -16378,6 +16383,7 @@ selects.config_setting_group(
+     name = "aarch64",
+     match_any = [
+         ":android_arm64",
++        ":windows_arm64",
+         ":ios_arm64",
+         ":ios_arm64e",
+         ":ios_sim_arm64",
 --- a/build_defs.bzl
 +++ b/build_defs.bzl
 @@ -146,7 +146,7 @@ def xnnpack_cc_library(
