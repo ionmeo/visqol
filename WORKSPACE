@@ -123,7 +123,14 @@ http_archive(
     urls = ["https://github.com/google/XNNPACK/archive/e8f74a9763aa36559980a0c2f37f587794995622.zip"],
     patch_cmds = [
         # Add default case after every :riscv line in select() statements
-        "sed 's/\":riscv\": \\(.*\\),/\":riscv\": \\1,\\n        \"\\x2f\\x2fconditions:default\": [],/' BUILD.bazel > BUILD.bazel.new && mv BUILD.bazel.new BUILD.bazel",
+        """python3 -c "
+import re
+with open('BUILD.bazel', 'r') as f:
+    content = f.read()
+content = re.sub(r'(\":riscv\": [^,]+,)', r'\\1\\n        \"//conditions:default\": [],', content)
+with open('BUILD.bazel', 'w') as f:
+    f.write(content)
+" """,
     ],
 )
 
