@@ -1,0 +1,21 @@
+--- a/src/arm/cache.c	2026-03-19 03:09:33.643332900 -0400
++++ b/src/arm/cache.c	2026-03-19 03:09:47.847897600 -0400
+@@ -11,13 +11,13 @@
+ 	enum cpuinfo_uarch uarch,
+ 	uint32_t cluster_cores,
+ 	uint32_t midr,
+-	const struct cpuinfo_arm_chipset chipset[restrict static 1],
++	const struct cpuinfo_arm_chipset chipset[CPUINFO_RESTRICT_STATIC 1],
+ 	uint32_t cluster_id,
+ 	uint32_t arch_version,
+-	struct cpuinfo_cache l1i[restrict static 1],
+-	struct cpuinfo_cache l1d[restrict static 1],
+-	struct cpuinfo_cache l2[restrict static 1],
+-	struct cpuinfo_cache l3[restrict static 1])
++	struct cpuinfo_cache l1i[CPUINFO_RESTRICT_STATIC 1],
++	struct cpuinfo_cache l1d[CPUINFO_RESTRICT_STATIC 1],
++	struct cpuinfo_cache l2[CPUINFO_RESTRICT_STATIC 1],
++	struct cpuinfo_cache l3[CPUINFO_RESTRICT_STATIC 1])
+ {
+ 	switch (uarch) {
+ #if CPUINFO_ARCH_ARM && !defined(__ARM_ARCH_7A__) && !defined(__ARM_ARCH_8A__)

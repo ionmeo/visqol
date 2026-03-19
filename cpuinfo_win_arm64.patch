@@ -5,10 +5,10 @@
      copts = select({
          ":windows_x86_64": [],
 +        ":windows_arm64": [
++            "/std:c11",
 +            "-D_GNU_SOURCE=1",
 +            "-DCPUINFO_INTERNAL=",
 +            "-DCPUINFO_PRIVATE=",
-+            "/TP",
 +        ],
          "//conditions:default": C99OPTS,
      }) + [
