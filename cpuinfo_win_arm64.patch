@@ -13,3 +13,4 @@
          "//conditions:default": C99OPTS,
      }) + [
          "-Iexternal/cpuinfo/include",
+         "-Iexternal/cpuinfo/src",
