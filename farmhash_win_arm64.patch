@@ -21,3 +21,4 @@
          "//conditions:default": [],
      }),
      includes = ["src/."],
+     visibility = ["//visibility:public"],
