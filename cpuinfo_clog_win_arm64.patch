@@ -1,0 +1,22 @@
+--- a/deps/clog/BUILD.bazel
++++ b/deps/clog/BUILD.bazel
+@@ -20,6 +20,7 @@
+     ],
+     copts = select({
+         ":windows": [],
++        ":windows_arm64": [],
+         "//conditions:default": ["-Wno-unused-result"],
+     }),
+     defines = select({
+@@ -50,6 +51,11 @@
+ )
+
+ config_setting(
++    name = "windows_arm64",
++    values = {"cpu": "arm64_windows"},
++)
++
++config_setting(
+     name = "macos_x86_64",
+     values = {
+         "apple_platform_type": "macos",

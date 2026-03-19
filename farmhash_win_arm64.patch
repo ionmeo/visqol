@@ -1,0 +1,24 @@
+--- a/third_party/farmhash/farmhash.BUILD
++++ b/third_party/farmhash/farmhash.BUILD
+@@ -5,6 +5,11 @@ config_setting(
+     name = "windows",
+     values = {
+         "cpu": "x64_windows",
++    },
++)
++
++config_setting(
++    name = "windows_arm64",
++    values = {
++        "cpu": "arm64_windows",
+     },
+ )
+
+@@ -14,6 +19,7 @@ cc_library(
+     hdrs = ["src/farmhash.h"],
+     # Disable __builtin_expect support on Windows
+     copts = select({
+         ":windows": ["/DFARMHASH_OPTIONAL_BUILTIN_EXPECT"],
++        ":windows_arm64": ["/DFARMHASH_OPTIONAL_BUILTIN_EXPECT"],
+         "//conditions:default": [],
+     }),

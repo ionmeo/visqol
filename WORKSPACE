@@ -110,7 +110,7 @@ http_archive(
     strip_prefix = "cpuinfo-5e63739504f0f8e18e941bd63b2d6d42536c7d90",
     urls = ["https://github.com/pytorch/cpuinfo/archive/5e63739504f0f8e18e941bd63b2d6d42536c7d90.tar.gz"],
     patch_args = ["-p1"],
-    patches = ["//:cpuinfo_default.patch"],
+    patches = ["//:cpuinfo_default.patch", "//:cpuinfo_win_arm64.patch", "//:cpuinfo_clog_win_arm64.patch"],
 )
 
 # XNNPACK - imported before TensorFlow to add default case for macOS x86_64 exec config
@@ -123,6 +123,16 @@ http_archive(
     patches = ["//:xnnpack_default.patch", "//:xnnpack_win_arm64.patch", "//:xnnpack_win_arm64_defs.patch"],
 )
 
+# pthreadpool - imported before TensorFlow to add Windows ARM64 support
+http_archive(
+    name = "pthreadpool",
+    sha256 = "b96413b10dd8edaa4f6c0a60c6cf5ef55eebeef78164d5d69294c8173457f0ec",
+    strip_prefix = "pthreadpool-b8374f80e42010941bda6c85b0e3f1a1bd77a1e0",
+    urls = ["https://github.com/Maratyszcza/pthreadpool/archive/b8374f80e42010941bda6c85b0e3f1a1bd77a1e0.zip"],
+    patch_args = ["-p1"],
+    patches = ["//:pthreadpool_win_arm64.patch"],
+)
+
 git_repository(
     name = "org_tensorflow",
     remote = "https://github.com/tensorflow/tensorflow.git",
@@ -130,7 +140,7 @@ git_repository(
     commit = "d5b57ca93e506df258271ea00fc29cf98383a374",
     shallow_since = "1668561432 -0800",
     patch_args = ["-p1"],
-    patches = ["//:tensorflow_cstdint.patch", "//:tensorflow_win_arm64.patch", "//:tensorflow_win_arm64_copts.patch"],
+    patches = ["//:tensorflow_cstdint.patch", "//:tensorflow_win_arm64.patch", "//:tensorflow_win_arm64_copts.patch", "//:farmhash_win_arm64.patch"],
 )
 
 # Import all of TensorFlow Serving's external dependencies.

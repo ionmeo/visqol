@@ -1,0 +1,10 @@
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -135,6 +135,7 @@ cc_library(
+     }),
+     copts = select({
+         ":windows_x86_64": [],
++        ":windows_arm64": [],
+         "//conditions:default": C99OPTS,
+     }) + [
+         "-Iexternal/cpuinfo/include",
