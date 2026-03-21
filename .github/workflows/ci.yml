@@ -109,7 +109,7 @@ jobs:
 
   macos-amd64:
     if: ${{ inputs.macos-amd64 }}
-    runs-on: macos-15-intel
+    runs-on: macos-26-intel
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
