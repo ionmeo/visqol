@@ -102,17 +102,7 @@ http_archive(
     strip_prefix = "XNNPACK-e8f74a9763aa36559980a0c2f37f587794995622",
     urls = ["https://github.com/google/XNNPACK/archive/e8f74a9763aa36559980a0c2f37f587794995622.zip"],
     patch_args = ["-p1"],
-    patches = ["//:xnnpack_default.patch", "//:xnnpack_win_arm64.patch", "//:xnnpack_win_arm64_defs.patch"],
-)
-
-# pthreadpool - imported before TensorFlow to add Windows ARM64 support
-http_archive(
-    name = "pthreadpool",
-    sha256 = "b96413b10dd8edaa4f6c0a60c6cf5ef55eebeef78164d5d69294c8173457f0ec",
-    strip_prefix = "pthreadpool-b8374f80e42010941bda6c85b0e3f1a1bd77a1e0",
-    urls = ["https://github.com/Maratyszcza/pthreadpool/archive/b8374f80e42010941bda6c85b0e3f1a1bd77a1e0.zip"],
-    patch_args = ["-p1"],
-    patches = ["//:pthreadpool_win_arm64.patch"],
+    patches = ["//:xnnpack_default.patch", "//:xnnpack_win_arm64.patch"],
 )
 
 git_repository(
