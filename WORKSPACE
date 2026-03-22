@@ -4,29 +4,11 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 
-# zlib - must be imported BEFORE TensorFlow to fix macOS Xcode 16+ fdopen conflict
-http_archive(
+# zlib - must be imported BEFORE TensorFlow to override TF's older version
+git_repository(
     name = "zlib",
-    build_file_content = """
-cc_library(
-    name = "zlib",
-    srcs = glob(["*.c"]),
-    hdrs = glob(["*.h"]),
-    includes = ["."],
-    copts = select({
-        "@bazel_tools//src/conditions:darwin": ["-include", "unistd.h"],
-        "//conditions:default": [],
-    }),
-    visibility = ["//visibility:public"],
-)
-""",
-    sha256 = "ff0ba4c292013dbc27530b3a81e1f9a813cd39de01ca5e0f8bf355702efa593e",
-    strip_prefix = "zlib-1.3",
-    urls = [
-        "https://github.com/madler/zlib/releases/download/v1.3/zlib-1.3.tar.gz",
-    ],
-    patch_args = ["-p1"],
-    patches = ["//:zlib_fdopen.patch"],
+    remote = "https://github.com/madler/zlib.git",
+    tag = "v1.3.2",
 )
 
 # The order of importing the archives is very important here.  In particular, tensorflow's
@@ -120,17 +102,7 @@ http_archive(
     strip_prefix = "XNNPACK-e8f74a9763aa36559980a0c2f37f587794995622",
     urls = ["https://github.com/google/XNNPACK/archive/e8f74a9763aa36559980a0c2f37f587794995622.zip"],
     patch_args = ["-p1"],
-    patches = ["//:xnnpack_default.patch", "//:xnnpack_win_arm64.patch", "//:xnnpack_win_arm64_defs.patch"],
-)
-
-# pthreadpool - imported before TensorFlow to add Windows ARM64 support
-http_archive(
-    name = "pthreadpool",
-    sha256 = "b96413b10dd8edaa4f6c0a60c6cf5ef55eebeef78164d5d69294c8173457f0ec",
-    strip_prefix = "pthreadpool-b8374f80e42010941bda6c85b0e3f1a1bd77a1e0",
-    urls = ["https://github.com/Maratyszcza/pthreadpool/archive/b8374f80e42010941bda6c85b0e3f1a1bd77a1e0.zip"],
-    patch_args = ["-p1"],
-    patches = ["//:pthreadpool_win_arm64.patch"],
+    patches = ["//:xnnpack_default.patch", "//:xnnpack_win_arm64.patch"],
 )
 
 git_repository(
