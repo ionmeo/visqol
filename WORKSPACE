@@ -4,6 +4,13 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 
+# import zlib before TensorFlow to override TF's older version
+git_repository(
+    name = "zlib",
+    remote = "https://github.com/madler/zlib.git",
+    tag = "v1.3.2",
+)
+
 # The order of importing the archives is very important here.  In particular, tensorflow's
 # workspace import function imports a version of pybind11 and protobuf that are older and
 # not compatible with current pybind11_protobuf/abseil.  Since the first import is the only
@@ -78,32 +85,14 @@ git_repository(
     tag = "v1.14.0",
 )
 
-# Import zlib 1.3.2 before TensorFlow to override TF's bundled zlib 1.2.13 
-# which defines a fdopen macro that conflicts with newer macOS SDK headers.
-# zlib 1.3.2 is also the first release to include BUILD.bazel file, making
-# integration with VISQOL easier.
-git_repository(
-    name = "zlib",
-    remote = "https://github.com/madler/zlib.git",
-    tag = "v1.3.2",
-)
-
 # Import cpuinfo-6543fec before TensorFlow to override TF's bundled
 # cpuinfo-5e63739 for windows-arm64 support
 git_repository(
     name = "cpuinfo",
     remote = "https://github.com/pytorch/cpuinfo.git",
-    commit = "7607ca500436b37ad23fb8d18614bec7796b68a7",
-)
-
-# XNNPACK - imported before TensorFlow to add default case for macOS x86_64 exec config
-http_archive(
-    name = "XNNPACK",
-    sha256 = "7a16ab0d767d9f8819973dbea1dc45e4e08236f89ab702d96f389fdc78c5855c",
-    strip_prefix = "XNNPACK-e8f74a9763aa36559980a0c2f37f587794995622",
-    urls = ["https://github.com/google/XNNPACK/archive/e8f74a9763aa36559980a0c2f37f587794995622.zip"],
+    commit = "6543fec09b2f2e6e3b3f92e2fea1dab56cde8325",
     patch_args = ["-p1"],
-    patches = ["//:xnnpack_default.patch", "//:xnnpack_win_arm64.patch"],
+    patches = ["//:cpuinfo_msvc_compat.patch", "//:cpuinfo_msvc_compat_cache.patch", "//:cpuinfo_msvc_compat_uarch.patch"],
 )
 
 git_repository(

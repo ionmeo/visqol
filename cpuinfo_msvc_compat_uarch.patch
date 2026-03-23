@@ -1,0 +1,15 @@
+diff --git a/src/arm/uarch.c b/src/arm/uarch.c
+index 68531e4..9eefe68 100644
+--- a/src/arm/uarch.c
++++ b/src/arm/uarch.c
+@@ -9,8 +9,8 @@ void cpuinfo_arm_decode_vendor_uarch(
+ #if CPUINFO_ARCH_ARM
+ 	bool has_vfpv4,
+ #endif /* CPUINFO_ARCH_ARM */
+-	enum cpuinfo_vendor vendor[restrict static 1],
+-	enum cpuinfo_uarch uarch[restrict static 1]) {
++	enum cpuinfo_vendor vendor[RESTRICT_STATIC 1],
++	enum cpuinfo_uarch uarch[RESTRICT_STATIC 1]) {
+ 	switch (midr_get_implementer(midr)) {
+ 		case 'A':
+ 			*vendor = cpuinfo_vendor_arm;
