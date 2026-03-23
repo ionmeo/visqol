@@ -8,9 +8,9 @@ licenses(["notice"])
 
 exports_files(["LICENSE"])
 
-config_setting(
-    name = "windows_arm64",
-    values = {"cpu": "arm64_windows"},
++config_setting(
+    name = "disable_xnnpack",
+    define_values = {"tflite_with_xnnpack": "false"},
 )
 
 # Libraries
@@ -58,7 +58,7 @@ cc_library(
     hdrs = ["src/include/tflite_quality_mapper.h"],
     includes = ["src/include"],
     defines = select({
-        ":windows_arm64": ["VISQOL_NO_XNNPACK"],
+        ":disable_xnnpack": ["VISQOL_NO_XNNPACK"],
         "//conditions:default": [],
     }),
     deps = [
@@ -70,7 +70,7 @@ cc_library(
         "@org_tensorflow//tensorflow/lite/c:c_api_types",
         "@org_tensorflow//tensorflow/lite/kernels:builtin_ops",
     ] + select({
-        ":windows_arm64": [],
+        ":disable_xnnpack": [],
         "//conditions:default": [
             "@org_tensorflow//tensorflow/lite/delegates/xnnpack:xnnpack_delegate",
         ],
