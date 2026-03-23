@@ -90,9 +90,9 @@ git_repository(
 git_repository(
     name = "cpuinfo",
     remote = "https://github.com/pytorch/cpuinfo.git",
-    commit = "6543fec09b2f2e6e3b3f92e2fea1dab56cde8325",
+    commit = "ff24ffee8340fbd9001cce6a9ef41cdd16aa2bd3",
     patch_args = ["-p1"],
-    patches = ["//:cpuinfo_msvc_compat.patch", "//:cpuinfo_msvc_compat_cache.patch", "//:cpuinfo_msvc_compat_uarch.patch"],
+    patches = ["//:cpuinfo_msvc_compat_cache.patch"],
 )
 
 git_repository(

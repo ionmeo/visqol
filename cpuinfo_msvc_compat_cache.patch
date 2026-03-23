@@ -1,5 +1,5 @@
 diff --git a/src/arm/cache.c b/src/arm/cache.c
-index dd19919..95d3747 100644
+index 97740c4..c0ab7dd 100644
 --- a/src/arm/cache.c
 +++ b/src/arm/cache.c
 @@ -10,13 +10,13 @@ void cpuinfo_arm_decode_cache(
