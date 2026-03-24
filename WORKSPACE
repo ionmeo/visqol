@@ -197,10 +197,7 @@ cc_library(
 # PFFFT
 new_git_repository(
     name = "pffft_lib",
-    commit = "7c3b5a7dc510a0f513b9c5b6dc5b56f7aeeda422",
-    shallow_since = "1644946905 +0000",
-    patch_args = ["-p1"],
-    patches = ["//:pffft_neon_msvc.patch"],
+    commit = "09796885cd5b9da5692242de2df0d81e5e1f3d21",
     build_file_content = """
 cc_library(
     name = "pffft_lib",
