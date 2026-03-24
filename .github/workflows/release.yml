@@ -26,6 +26,16 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PLATFORMS: "visqol-linux-amd64 visqol-linux-arm64 visqol-macos-amd64 visqol-macos-arm64 visqol-windows-amd64 visqol-windows-arm64"
     steps:
+      - name: Checkout repo
+        if: inputs.overwrite == true
+        uses: actions/checkout@v6
+
+      - name: Update tag to latest commit
+        if: inputs.overwrite == true
+        run: |
+          git tag -f ${{ inputs.tag }}
+          git push origin ${{ inputs.tag }} --force
+
       - name: Check existing release
         if: inputs.overwrite == false
         run: |
